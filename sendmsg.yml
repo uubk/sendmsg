@@ -1,0 +1,2 @@
+backend: slack
+webhook: https://hooks.slack.com/services/something/secret/changeme
