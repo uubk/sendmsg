@@ -1,8 +1,8 @@
 package main
 
 import (
-	"strings"
 	"bytes"
+	"strings"
 )
 
 type fieldList []Field
@@ -15,7 +15,7 @@ func (e *FieldArgParseError) Error() string {
 	return e.err
 }
 
-func (s *fieldList) String() string{
+func (s *fieldList) String() string {
 	var buffer bytes.Buffer
 	for _, item := range *s {
 		buffer.WriteString("Element Title: ")

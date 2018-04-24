@@ -1,36 +1,36 @@
 package main
 
 import (
-	"net/http"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type SlackField struct {
-	Text string `json:"value,omitempty"`
+	Text  string `json:"value,omitempty"`
 	Title string `json:"title,omitempty"`
-	Short bool `json:"short,omitempty"`
+	Short bool   `json:"short,omitempty"`
 }
 
 type SlackAttachments struct {
-	Color string `json:"color,omitempty"`
-	Text string `json:"text,omitempty"`
-	Title string  `json:"title,omitempty"`
-	TitleLink string  `json:"title_link,omitempty"`
-	Fields []SlackField `json:"fields,omitempty"`
-	Footer string `json:"footer,omitempty"`
-	FooterIcon string `json:"footer_icon,omitempty"`
-	Head string `json:"author_name,omitempty"`
+	Color      string       `json:"color,omitempty"`
+	Text       string       `json:"text,omitempty"`
+	Title      string       `json:"title,omitempty"`
+	TitleLink  string       `json:"title_link,omitempty"`
+	Fields     []SlackField `json:"fields,omitempty"`
+	Footer     string       `json:"footer,omitempty"`
+	FooterIcon string       `json:"footer_icon,omitempty"`
+	Head       string       `json:"author_name,omitempty"`
 }
 
 type SlackMessage struct {
-	Text string `json:"text,omitempty"`
-	Attachments []SlackAttachments  `json:"attachments,omitempty"`
+	Text        string             `json:"text,omitempty"`
+	Attachments []SlackAttachments `json:"attachments,omitempty"`
 }
 
-func send_with_slack(msg Message, cfg Config, frontend string, frontendIcon string) {
+func send_with_slack(msg Message, cfg Config) {
 	var body SlackMessage
 	var attachement SlackAttachments
 	attachement.Head = msg.Head
@@ -53,9 +53,9 @@ func send_with_slack(msg Message, cfg Config, frontend string, frontendIcon stri
 		fields = append(fields, field)
 	}
 	attachement.Fields = fields
-	attachement.Footer = frontend + " (sendmsg)"
-	if frontendIcon != "" {
-		attachement.FooterIcon = frontendIcon
+	attachement.Footer = msg.Frontend + " (sendmsg "+ gitversion+ ")"
+	if msg.FrontendIconURL != "" {
+		attachement.FooterIcon = msg.FrontendIconURL
 	}
 	body.Attachments = []SlackAttachments{attachement}
 

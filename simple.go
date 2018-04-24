@@ -4,12 +4,12 @@ import "flag"
 
 type simpleCmdData struct {
 	SimpleCFGLocation *string
-	head *string
-	title *string
-	title_url *string
-	body *string
-	color *string
-	fields fieldList
+	head              *string
+	title             *string
+	title_url         *string
+	body              *string
+	color             *string
+	fields            fieldList
 }
 
 func (this *simpleCmdData) Init(flagSet *flag.FlagSet) {
@@ -30,5 +30,8 @@ func (this *simpleCmdData) Parse() Message {
 	msg.Body_title = *this.title
 	msg.Body_link = *this.title_url
 	msg.Fields = this.fields
+
+	msg.Frontend = "simple"
+
 	return msg
 }

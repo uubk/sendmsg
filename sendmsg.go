@@ -2,13 +2,18 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"fmt"
-	"os"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"os"
 )
 
+var gitversion = "undefined"
+
 func main() {
+	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.WarnLevel)
 	// 'Simple' frontend - that is specifying each field manually
 	simpleCommand := flag.NewFlagSet("simple", flag.ExitOnError)
 	simpleFrontendCmd := simpleCmdData{}
@@ -66,6 +71,6 @@ func main() {
 
 	switch cfg.Backend {
 	case "slack":
-		send_with_slack(msg, cfg, "simple", "")
+		send_with_slack(msg, cfg)
 	}
 }

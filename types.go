@@ -1,18 +1,20 @@
 package main
 
 type Field struct {
-	Text string
+	Text   string
 	Header string
-	Short bool
+	Short  bool
 }
 
 type Message struct {
-	Head string
-	Body_title string
-	Body_link string
-	Body string
-	Color string
-	Fields []Field
+	Head            string
+	Body_title      string
+	Body_link       string
+	Body            string
+	Color           string
+	Fields          []Field
+	Frontend        string
+	FrontendIconURL string
 }
 
 type Config struct {
@@ -20,4 +22,4 @@ type Config struct {
 	Webhook string `yaml:"webhook"`
 }
 
-type CmdData struct {}
+type CmdData struct{}
