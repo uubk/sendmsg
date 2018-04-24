@@ -73,7 +73,7 @@ func main() {
 
 	if msg.Body == "" || msg.Body_title == "" {
 		logrus.WithFields(logrus.Fields{
-			"Body": msg.Body,
+			"Body":  msg.Body,
 			"Title": msg.Body_title,
 		}).Fatal("Either title or body are missing!")
 	}

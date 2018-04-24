@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
-	"github.com/sirupsen/logrus"
 )
 
 type SlackField struct {
@@ -53,7 +53,7 @@ func send_with_slack(msg Message, cfg Config) {
 		fields = append(fields, field)
 	}
 	attachement.Fields = fields
-	attachement.Footer = msg.Frontend + " (sendmsg "+ gitversion+ ")"
+	attachement.Footer = msg.Frontend + " (sendmsg " + gitversion + ")"
 	if msg.FrontendIconURL != "" {
 		attachement.FooterIcon = msg.FrontendIconURL
 	}

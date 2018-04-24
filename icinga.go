@@ -1,27 +1,27 @@
 package main
 
 import (
-	"flag"
 	"bytes"
-	"net/url"
-	"time"
+	"flag"
 	"github.com/sirupsen/logrus"
+	"net/url"
 	"strconv"
 	"strings"
+	"time"
 )
 
-var icGoodState = map[string]bool {
+var icGoodState = map[string]bool{
 	"UP": true,
 	"OK": true,
 }
 
-var icBadState = map[string]bool {
+var icBadState = map[string]bool{
 	"UNREACHABLE": true,
-	"DOWN": true,
-	"CRITICAL": true,
+	"DOWN":        true,
+	"CRITICAL":    true,
 }
 
-var icWarnState = map[string]bool {
+var icWarnState = map[string]bool{
 	"WARNING": true,
 }
 
@@ -38,14 +38,14 @@ type icingaCmd struct {
 	icNotfnComment *string
 	icURL          *string
 	// Service-only fields
-	icServiceName *string
+	icServiceName        *string
 	icServiceDisplayName *string
 	// Fields below are unused currently but need to be parsed in order to be compliant
-	icDateTime *string
+	icDateTime        *string
 	icHostDisplayname *string
-	icUserEmail *string
-	icMailFrom *string
-	icToSyslog *string
+	icUserEmail       *string
+	icMailFrom        *string
+	icToSyslog        *string
 	// Which command are we executing?
 	icIsServiceCMD bool
 }
@@ -115,9 +115,9 @@ func (this *icingaCmd) Parse() Message {
 		params.Add("host", *this.icHostname)
 		if this.icIsServiceCMD {
 			params.Add("service", *this.icServiceName)
-			msg.Body_link = *this.icURL + "/monitoring/service/show?"+ strings.Replace(params.Encode(), "+", "%20", -1)
+			msg.Body_link = *this.icURL + "/monitoring/service/show?" + strings.Replace(params.Encode(), "+", "%20", -1)
 		} else {
-			msg.Body_link = *this.icURL + "/monitoring/host/show?"+ strings.Replace(params.Encode(), "+", "%20", -1)
+			msg.Body_link = *this.icURL + "/monitoring/host/show?" + strings.Replace(params.Encode(), "+", "%20", -1)
 		}
 	}
 
@@ -145,13 +145,13 @@ func addFieldToMessage(msg *Message, short bool, header string, field *string) {
 	if *field != "" {
 		msg.Fields = append(msg.Fields, Field{
 			Header: header,
-			Text: *field,
-			Short: short,
+			Text:   *field,
+			Short:  short,
 		})
 	}
 }
 
 func convertToSlackDate(timestamp time.Time) string {
 	return "<!date^" + strconv.FormatInt(timestamp.Unix(), 10) + "^{date_num} {time_secs}|" +
-		timestamp.Format("Mon Jan 2 15:04:05 -0700 MST 2006")+ ">"
+		timestamp.Format("Mon Jan 2 15:04:05 -0700 MST 2006") + ">"
 }
