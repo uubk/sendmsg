@@ -26,7 +26,8 @@ var icWarnState = map[string]bool{
 }
 
 type icingaCmd struct {
-	SimpleCFGLocation *string
+	CFGLocation *string
+	Debug       *bool
 	// Shared fields
 	icHostname     *string
 	icHostV4       *string
@@ -51,7 +52,8 @@ type icingaCmd struct {
 }
 
 func (this *icingaCmd) Init(flagSet *flag.FlagSet, isServiceCMD bool) {
-	this.SimpleCFGLocation = flagSet.String("cfg", "/etc/sendmsg.yml", "Path to sendmsg config")
+	this.CFGLocation = flagSet.String("cfg", "/etc/sendmsg.yml", "Path to sendmsg config")
+	this.Debug = flagSet.Bool("debug", false, "Whether to print verbose debug messages")
 	this.icHostname = flagSet.String("l", "", "Hostname")
 	this.icHostV4 = flagSet.String("4", "", "Host address (v4)")
 	this.icHostV6 = flagSet.String("6", "", "Host address (v6)")

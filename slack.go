@@ -76,8 +76,6 @@ func send_with_slack(msg Message, cfg Config) {
 	bodyString := string(bodyBytes)
 
 	if bodyString != "ok" {
-		logrus.WithFields(logrus.Fields{
-			"rc": bodyString,
-		}).Warnf("Slack didn't return 'OK'")
+		logrus.WithField("rc", bodyString).Warnf("Slack didn't return 'OK'")
 	}
 }

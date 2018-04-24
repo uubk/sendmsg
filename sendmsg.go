@@ -32,22 +32,30 @@ func main() {
 	}
 
 	var cfglocation *string
+	var debug *bool
 	switch os.Args[1] {
 	case "simple":
 		simpleCommand.Parse(os.Args[2:])
-		cfglocation = simpleFrontendCmd.SimpleCFGLocation
+		cfglocation = simpleFrontendCmd.CFGLocation
+		debug = simpleFrontendCmd.Debug
 		break
 	case "icingaHost":
 		icingaHostCommand.Parse(os.Args[2:])
-		cfglocation = icingaHostCmd.SimpleCFGLocation
+		cfglocation = icingaHostCmd.CFGLocation
+		debug = icingaHostCmd.Debug
 		break
 	case "icingaService":
 		icingaServiceCommand.Parse(os.Args[2:])
-		cfglocation = icingaServiceCmd.SimpleCFGLocation
+		cfglocation = icingaServiceCmd.CFGLocation
+		debug = icingaServiceCmd.Debug
 		break
 	default:
 		flag.PrintDefaults()
 		return
+	}
+
+	if *debug {
+		logrus.SetLevel(logrus.DebugLevel)
 	}
 
 	cfg := Config{}
@@ -59,6 +67,12 @@ func main() {
 	} else {
 		logrus.WithError(err).Fatal("Couldn't read the configuration file!")
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"version":  gitversion,
+		"frontend": os.Args[1],
+		"backend":  cfg.Backend,
+	}).Info("Starting sendmsg")
 
 	var msg Message
 	if simpleCommand.Parsed() {
@@ -81,5 +95,7 @@ func main() {
 	switch cfg.Backend {
 	case "slack":
 		send_with_slack(msg, cfg)
+	default:
+		logrus.WithField("backend", cfg.Backend).Fatal("Unkown backend!")
 	}
 }

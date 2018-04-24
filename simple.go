@@ -3,23 +3,25 @@ package main
 import "flag"
 
 type simpleCmdData struct {
-	SimpleCFGLocation *string
-	head              *string
-	title             *string
-	title_url         *string
-	body              *string
-	color             *string
-	fields            fieldList
+	CFGLocation *string
+	head        *string
+	title       *string
+	title_url   *string
+	body        *string
+	color       *string
+	fields      fieldList
+	Debug       *bool
 }
 
 func (this *simpleCmdData) Init(flagSet *flag.FlagSet) {
-	this.SimpleCFGLocation = flagSet.String("cfg", "/etc/sendmsg.yml", "Path to sendmsg config")
+	this.CFGLocation = flagSet.String("cfg", "/etc/sendmsg.yml", "Path to sendmsg config")
 	this.head = flagSet.String("head", "", "The header of the message to send (required)")
 	this.title = flagSet.String("title", "", "The title of the message to send (required)")
 	this.title_url = flagSet.String("title_url", "", "The url of the title of the message to send")
 	this.body = flagSet.String("body", "", "The body of the message to send")
 	this.color = flagSet.String("color", "", "The color of the message to send")
 	flagSet.Var(&this.fields, "fields", "A comma seperated list of fields (name:text) to be added")
+	this.Debug = flagSet.Bool("debug", false, "Whether to print verbose debug messages")
 }
 
 func (this *simpleCmdData) Parse() Message {
