@@ -30,6 +30,12 @@ func (this *icingaHostCmd) Init(flagSet *flag.FlagSet) {
 func (this *icingaHostCmd) Parse() Message {
 	var msg Message
 
+	msg.Fields = []Field {
+		{
+			Header: "IPv4",
+			Text: *this.icHostV4,
+		},
+	}
 	// TODO
 
 	return msg

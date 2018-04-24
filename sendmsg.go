@@ -20,7 +20,7 @@ func main() {
 	icingaHostCmd.Init(icingaHostCommand)
 
 	if len(os.Args) < 2 {
-		fmt.Print("Please use one of [simple, icingaHost]")
+		fmt.Print("Please use one of [simple, icingaHost]\n")
 		return
 	}
 
@@ -31,7 +31,7 @@ func main() {
 		cfglocation = simpleFrontendCmd.SimpleCFGLocation
 		break
 	case "icingaHost":
-		simpleCommand.Parse(os.Args[2:])
+		icingaHostCommand.Parse(os.Args[2:])
 		cfglocation = icingaHostCmd.SimpleCFGLocation
 		break
 	default:
