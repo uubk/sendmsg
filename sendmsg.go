@@ -20,11 +20,15 @@ func main() {
 
 	// 'Icinga2' frontend - use this as a drop-in replacement for mails
 	icingaHostCommand := flag.NewFlagSet("icingaHost", flag.ExitOnError)
-	icingaHostCmd := icingaHostCmd{}
-	icingaHostCmd.Init(icingaHostCommand)
+	icingaServiceCommand := flag.NewFlagSet("icingaService", flag.ExitOnError)
+	icingaHostCmd := icingaCmd{}
+	icingaHostCmd.Init(icingaHostCommand, false)
+	icingaServiceCmd := icingaCmd{}
+	icingaServiceCmd.Init(icingaServiceCommand, true)
 
 	if len(os.Args) < 2 {
-		logrus.Fatal("Please use one of [simple, icingaHost]")
+		logrus.Fatal("Please specify a command [simple, icingaHost, icingaService]")
+		flag.PrintDefaults()
 	}
 
 	var cfglocation *string
@@ -36,6 +40,10 @@ func main() {
 	case "icingaHost":
 		icingaHostCommand.Parse(os.Args[2:])
 		cfglocation = icingaHostCmd.SimpleCFGLocation
+		break
+	case "icingaService":
+		icingaServiceCommand.Parse(os.Args[2:])
+		cfglocation = icingaServiceCmd.SimpleCFGLocation
 		break
 	default:
 		flag.PrintDefaults()
@@ -58,6 +66,9 @@ func main() {
 	}
 	if icingaHostCommand.Parsed() {
 		msg = icingaHostCmd.Parse()
+	}
+	if icingaServiceCommand.Parsed() {
+		msg = icingaServiceCmd.Parse()
 	}
 
 	if msg.Body == "" || msg.Body_title == "" {
