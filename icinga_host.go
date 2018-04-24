@@ -4,7 +4,6 @@ import (
 	"flag"
 	"bytes"
 	"net/url"
-	"fmt"
 	"time"
 	"github.com/sirupsen/logrus"
 	"strconv"
@@ -70,10 +69,9 @@ func (this *icingaHostCmd) Parse() Message {
 		logrus.WithFields(logrus.Fields{
 			"error": err,
 		}).Warn("Couldn't parse supplied timestamp")
-		panic("Abort")
 	} else {
-		time := convertToSlackDate(timestamp)
-		addFieldToMessage(&msg, true, "Timestamp", &time)
+		timeStr := convertToSlackDate(timestamp)
+		addFieldToMessage(&msg, true, "Timestamp", &timeStr)
 	}
 
 	var buffer bytes.Buffer
@@ -88,13 +86,9 @@ func (this *icingaHostCmd) Parse() Message {
 	msg.Body = buffer.String()
 
 	if *this.icURL != "" {
-		if err != nil {
-			fmt.Errorf("WARNING: Couldn't parse specified url, skipping link: ", err)
-		} else {
-			params := url.Values{}
-			params.Add("host", *this.icHostname)
-			msg.Body_link = *this.icURL + "/monitoring/host/show?"+ params.Encode()
-		}
+		params := url.Values{}
+		params.Add("host", *this.icHostname)
+		msg.Body_link = *this.icURL + "/monitoring/host/show?"+ params.Encode()
 	}
 
 	if icBadState[*this.icHostState] {

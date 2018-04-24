@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -25,8 +24,7 @@ func main() {
 	icingaHostCmd.Init(icingaHostCommand)
 
 	if len(os.Args) < 2 {
-		fmt.Print("Please use one of [simple, icingaHost]\n")
-		return
+		logrus.Fatal("Please use one of [simple, icingaHost]")
 	}
 
 	var cfglocation *string
@@ -48,12 +46,10 @@ func main() {
 	if contents, err := ioutil.ReadFile(*cfglocation); err == nil {
 		err = yaml.UnmarshalStrict(contents, &cfg)
 		if err != nil {
-			fmt.Println("ERROR: Couldn't parse the configuration file!", err)
-			os.Exit(-1)
+			logrus.WithError(err).Fatal("Couldn't parse the configuration file!")
 		}
 	} else {
-		fmt.Println("ERROR: Couldn't read the configuration file!", err)
-		os.Exit(-1)
+		logrus.WithError(err).Fatal("Couldn't read the configuration file!")
 	}
 
 	var msg Message
@@ -65,8 +61,10 @@ func main() {
 	}
 
 	if msg.Body == "" || msg.Body_title == "" {
-		fmt.Println("ERROR: Either title or body are missing. Aborting now!")
-		return
+		logrus.WithFields(logrus.Fields{
+			"Body": msg.Body,
+			"Title": msg.Body_title,
+		}).Fatal("Either title or body are missing!")
 	}
 
 	switch cfg.Backend {

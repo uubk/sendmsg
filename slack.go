@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"github.com/sirupsen/logrus"
 )
 
 type SlackField struct {
@@ -61,24 +61,23 @@ func send_with_slack(msg Message, cfg Config) {
 
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
-		fmt.Errorf("Coudln't masrshal message for JSON transport: ", err)
-		return
+		logrus.WithError(err).Fatal("Couldn't marshal message for JSON transport!")
 	}
 	resp, err := http.Post(cfg.Webhook, "application/reader", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		fmt.Errorf("Coudln't POST message to webhook: ", err)
-		return
+		logrus.WithError(err).Fatal("Couldn't POST message to webhook!")
 	}
 	defer resp.Body.Close()
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Errorf("Couldn't read body", err)
+		logrus.WithError(err).Warnf("Couldn't read back response body!")
 	}
 	bodyString := string(bodyBytes)
-	fmt.Print(bodyString)
 
 	if bodyString != "ok" {
-		fmt.Errorf("Slack didn't like what we sent, error: ", bodyString)
+		logrus.WithFields(logrus.Fields{
+			"rc": bodyString,
+		}).Warnf("Slack didn't return 'OK'")
 	}
 }
