@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+
+export DH_OPTIONS
+export DH_GOPKG=github.com/uubk/sendmsg
+
+%:
+	dh $@ --buildsystem=golang --with=golang
+
+override_dh_auto_install:
+	dh_auto_install $@
